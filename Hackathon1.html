@@ -1,0 +1,184 @@
+# Implementation Plan — TeenVerseHub: SkillSwap (Full Platform Expansion)
+
+Building upon the established Next.js architecture, this plan expands **TeenVerseHub — SkillSwap** into the complete, youth-focused creator ecosystem defined around the core product loop:
+$$\text{SKILL} \rightarrow \text{PROOF} \rightarrow \text{DISCOVERY} \rightarrow \text{AI MATCH} \rightarrow \text{BOOKING} \rightarrow \text{OPPORTUNITY} \rightarrow \text{REPUTATION} \rightarrow \text{GROWTH}$$
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Signature Identity Features**:
+> 1. **Creator Passport**: A signature digital identity card for young creators displaying Level, XP bar, verified skill badges, rating, completed projects, and share action.
+> 2. **Skill Quests (`/quests`)**: An interactive challenge arena where young creators prove their abilities (Design, Editing, Coding, Tutoring, Beats), submit proofs, and earn XP and badges.
+> 3. **AI Profile Builder (`/ai-profile-builder`)**: A creator tool that generates a professional bio, headline, suggested skills, and service titles from simple prompts (e.g., *\"I edit gaming videos and make thumbnails\"*).
+> 4. **Routes & Aliases**: We will ensure both `/skillswap` and `/discover` provide the marketplace, `/skillmatch` and `/ai-match` host the AI engine, and `/creator/[username]` resolves seamlessly by username and ID.
+
+---
+
+## Proposed Changes & File Architecture
+
+```
+Navdeep-Vinit-skillswap/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx                    # Enhanced Homepage (Hero, What is TVH, Creator Spotlight Maya, Quests teaser, Passport teaser, Product loop, Testimonials, Stats)
+│   │   ├── skillswap/
+│   │   │   └── page.tsx                # /skillswap Marketplace with "Find Your Next Creator" & category cards
+│   │   ├── skillmatch/
+│   │   │   └── page.tsx                # /skillmatch AI Recommendation Engine with cognitive steps & 94% match cards
+│   │   ├── quests/
+│   │   │   └── page.tsx                # /quests Skill Quests with interactive submission modal & instant XP reward
+│   │   ├── ai-profile-builder/
+│   │   │   └── page.tsx                # /ai-profile-builder Studio for young creators
+│   │   ├── create-service/
+│   │   │   └── page.tsx                # /create-service Studio with 3-tier packages (₹299 Starter, ₹799 Pro, ₹1,499 Premium)
+│   │   ├── saved/
+│   │   │   └── page.tsx                # /saved Saved creators and services showcase
+│   │   ├── login/
+│   │   │   └── page.tsx                # /login Prototype auth ("Continue as Creator" / "Continue as Client")
+│   │   ├── signup/
+│   │   │   └── page.tsx                # /signup Prototype registration
+│   │   ├── creator/
+│   │   │   └── [username]/page.tsx     # /creator/[username] with Creator Passport, Before/After portfolio slider, and tabs
+│   │   ├── dashboard/
+│   │   │   ├── creator/page.tsx        # Creator Studio with XP tracker, Badges shelf, Earnings chart, Active orders
+│   │   │   └── client/page.tsx         # Client Workspace with order stages and saved creators
+│   │   └── messages/
+│   │       └── page.tsx                # Real-time collaboration chat
+│   ├── components/
+│   │   ├── passport/
+│   │   │   └── CreatorPassport.tsx     # Signature digital Creator Passport widget & modal
+│   │   ├── quests/
+│   │   │   └── QuestCard.tsx           # Quest card with difficulty, instructions, submission form, XP reward
+│   │   ├── portfolio/
+│   │   │   └── BeforeAfterSlider.tsx   # Interactive before/after image comparison slider
+│   │   ├── layout/
+│   │   │   ├── Navbar.tsx              # Updated navigation with Quests, SkillMatch AI, Passport link, Saved, Auth
+│   │   │   └── Footer.tsx              # Updated footer with TeenVerseHub ecosystem links
+│   ├── data/
+│   │   ├── quests.ts                   # 6+ realistic Skill Quests across design, video, coding, tutoring, music
+│   │   ├── badges.ts                   # 10 badges with unlock criteria, XP rewards, and descriptions
+│   │   └── creators.ts                 # Enriched with Maya (@maya.designs), Level, XP, Passport metadata
+│   └── context/
+│       └── MarketplaceContext.tsx      # Extended with user XP, completedQuests, userProfile, and role state
+├── .env.example                        # Template for future AI API keys
+├── DECISIONS.md                        # Updated with Decision Point 3 on Skill Proof + Trust
+└── README.md                           # Updated with all new features and demo flows
+```
+
+---
+
+## Detailed Implementation Breakdown
+
+### 1. Homepage (`/`)
+- **Hero**: Exact requested headline: `"Your Skill Has Value. Let's Find Its Opportunity."`
+- **Subheading**: `"TeenVerseHub helps young creators turn their skills into real opportunities."`
+- **Buttons**: `Explore Skills` (links to `/skillswap`), `Become a Creator` (links to `/signup` or `/quests`).
+- **Animated Floating Service Cards**: 🎨 Logo Design, 🎬 Video Editing, 🎧 Music Production, 💻 Coding, 📚 Tutoring, 🎞️ Animation.
+- **Sections**:
+  1. What is TeenVerseHub? (Empowering young creators to build proof, reputation, and income).
+  2. "What do you want to create?" discovery cards (Make, Edit, Music, Learn, Build, Write).
+  3. **Creator Spotlight**: Maya (@maya.designs) — Designer • Video Editor, 4.9★, Rising Creator, *"Creating visuals that make ideas impossible to ignore."* with `Meet Maya` CTA.
+  4. The Product Loop: Visual flowchart from Skill to Growth.
+  5. SkillMatch AI preview with interactive prompt chips.
+  6. Skill Quests arena preview with XP callout.
+  7. Creator Passport signature feature preview.
+  8. Platform demo statistics (12K+ Skills, 3K+ Creators, 8K+ Projects, 4.8★ Rating) with prototype disclaimer.
+  9. Testimonials with realistic fictional teen creator and client personas.
+  10. Trust and transparency framework.
+  11. Final CTA & Footer.
+
+### 2. Signature Creator Passport (`CreatorPassport.tsx` & `/creator/[username]`)
+- Futuristic, premium card with holographic glassmorphism border.
+- Displays:
+  - Header: `TEENVERSEHUB CREATOR PASSPORT`
+  - Name, handle (e.g. Maya, `@maya.designs`), Avatar, Age badge
+  - Level badge (e.g. `LEVEL 12`)
+  - XP progress bar (`1,240 / 1,500 XP`)
+  - Rating: `⭐ 4.9`
+  - Primary skills tags (`🎨 Designer`, `🎬 Video Editor`)
+  - Stats: `🏆 8 Achievements`, `⚡ 24 Projects`, `Replies in <1h`
+  - Actions: `View Portfolio`, `Share Passport` (generates simulated share link + toast).
+
+### 3. Skill Quests (`/quests`)
+- Headline: `"Prove What You Can Create."`
+- Quests:
+  - 🎨 Design Quest: Create a youth social media festival poster (+150 XP, Medium, 45 mins)
+  - 🎬 Editing Quest: Edit a 15-second high-energy promotional reel (+150 XP, Hard, 60 mins)
+  - 💻 Coding Quest: Build a responsive dark-mode landing page (+200 XP, Hard, 90 mins)
+  - 📚 Tutoring Quest: Craft an intuitive 5-minute visual lesson cheat sheet (+100 XP, Easy, 30 mins)
+  - 🎵 Music Quest: Produce a 20-second chill lofi beat loop (+150 XP, Medium, 45 mins)
+- Interactive Quest modal:
+  - Full instructions, required deliverables, evaluation rubrics.
+  - Interactive submission form (simulated link or file upload).
+  - On submit: triggers celebration confetti, awards XP, updates creator Level, unlocks badge!
+
+### 4. XP Progression & Badges System
+- **XP Activities**:
+  - Complete profile (+50 XP)
+  - Complete quest (+150 XP)
+  - Complete client project (+100 XP)
+  - Receive 5-star review (+50 XP)
+  - Upload portfolio item (+25 XP)
+- **10 Core Badges**:
+  - `First Gig`: Completed first verified project.
+  - `Rising Creator`: Maintained 4.8+ rating across 5 orders.
+  - `Fast Responder`: Replies within 1 hour.
+  - `10 Projects`: Milestone badge for completing 10 gigs.
+  - `5-Star Creator`: Achieved 10 consecutive 5-star reviews.
+  - `Design Specialist`: Completed 3 Design Quests with top score.
+  - `Editing Specialist`: Verified for high-retention video cuts.
+  - `Top Tutor`: Helped 20+ students ace academic concepts.
+  - `Early Creator`: Founding member of TeenVerseHub.
+  - `Elite Creator`: Reached Level 15 and 30+ completed gigs.
+
+### 5. SkillMatch AI (`/skillmatch`)
+- Headline: `"Tell us what you need. We'll find the right skill."`
+- Real-time cognitive animation:
+  - `Understanding request...`
+  - `Identifying skills...`
+  - `Finding creators...`
+  - `Calculating matches...`
+- High match cards featuring `94% MATCH`, verified skill badges, `Why this creator matches` bullet points, and direct `Book Now` / `View Profile` triggers.
+
+### 6. AI Profile Builder (`/ai-profile-builder`)
+- Input prompt: `"I edit gaming videos and make thumbnails."`
+- Deterministic AI synthesis:
+  - Professional bio
+  - Suggested skills
+  - Service titles
+  - Tags
+  - Headline
+- Action buttons: `Use Suggestions`, `Regenerate`, `Edit`.
+
+### 7. Service Creation Studio (`/create-service`)
+- Form for creators to publish new services: Title, Category, Description, Tags, Requirements.
+- 3 package tiers configuration:
+  - **STARTER**: ₹299 (1 revision, 3-day delivery)
+  - **PRO**: ₹799 (3 revisions, 2-day delivery)
+  - **PREMIUM**: ₹1,499 (Unlimited revisions, 1-day delivery)
+
+### 8. Saved Page (`/saved`)
+- Shelf of saved creators and favorited services with heart toggle and quick book.
+
+### 9. Interactive Portfolio Before/After Slider
+- For graphic and video creators: draggable interactive before/after split slider (`BeforeAfterSlider.tsx`) showing raw footage/rough sketch vs. final polished render.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+1. `npm run build`: Verify zero TypeScript errors and successful prerendering of all routes (`/`, `/skillswap`, `/skillmatch`, `/quests`, `/ai-profile-builder`, `/create-service`, `/saved`, `/login`, `/signup`, `/creator/[username]`, `/service/[id]`, `/dashboard/creator`, `/dashboard/client`, `/messages`).
+2. Type check: Validate all interfaces in `src/types/index.ts`.
+
+### Manual End-to-End Demo Flow
+1. Visit `/` -> verify Hero headline, floating service cards, Maya Creator Spotlight, and Product Loop.
+2. Click `Explore Skills` -> open `/skillswap` -> search "gaming" or "math" -> test filters.
+3. Open Maya's profile (`/creator/maya.designs`) -> view **Creator Passport** -> interact with Before/After portfolio slider.
+4. Open `/skillmatch` -> enter query -> verify 4-step AI animation and 94% match result card with explainable reasons.
+5. Click `Book Now` -> complete 5-step booking flow -> see booking confirmation with confetti.
+6. Open `/quests` -> click "Start Quest" -> submit simulated deliverable -> see XP increase and badge unlock.
+7. Open `/ai-profile-builder` -> enter "I edit gaming videos" -> see generated bio and skills.
+8. Check Creator and Client Dashboards.
